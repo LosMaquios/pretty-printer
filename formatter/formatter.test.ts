@@ -4,6 +4,7 @@ import { Formatter } from "./formatter.ts";
 Deno.test("should print correctly", () => {
   const formatter = new Formatter({
     indentRoot: false,
+    circularId: true,
   });
 
   class ExtendedSet extends Set {}
@@ -23,7 +24,9 @@ test
     },
   ]);
 
-  extendedSet.add(extendedSet);
+  extendedSet.add({
+    quack: extendedSet,
+  });
 
   console.log(
     Deno.inspect(extendedSet, {
@@ -56,11 +59,12 @@ test
         };
       }
     },
-    a: "test",
     [
       `d
     `
     ]: "a",
+    a: "test",
+    e2: extendedSet,
   };
 
   console.log(`\`\n${formatter.format(test)}\n\``);
